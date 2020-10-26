@@ -16,6 +16,8 @@ namespace Something.Persistence
         Task SaveSomethingElseAsync(SomethingElse somethingElse);
         SomethingElse UpdateSomethingElseByIdAddSomething(int id, Domain.Models.Something something);
         Task<SomethingElse> UpdateSomethingElseByIdAddSomethingAsync(int id, Domain.Models.Something something);
+        SomethingElse UpdateSomethingElseByIdChangeTag(int id, string tag);
+        Task<SomethingElse> UpdateSomethingElseByIdChangeTagAsync(int id, string tag);
         SomethingElse UpdateSomethingElseByIdDeleteSomethingById(int else_id, int something_id);
         Task<SomethingElse> UpdateSomethingElseByIdDeleteSomethingByIdAsync(int else_id, int something_id);
     }

@@ -496,7 +496,7 @@ namespace SomethingTests
             {
                 var persistence = new SomethingElsePersistence(ctx);
                 Domain.Something something1 = mockSomethingFactory.Object.Create(something.Name);
-                var exception = Assert.Throws<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdAddSomething(id, something1));
+                Assert.Throws<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdAddSomething(id, something1));
             };
         }
 
@@ -517,7 +517,7 @@ namespace SomethingTests
             {
                 var persistence = new SomethingElsePersistence(ctx);
                 Domain.Something something1 = mockSomethingFactory.Object.Create(something.Name);
-                var exception = Assert.ThrowsAsync<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdAddSomethingAsync(id, something1));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdAddSomethingAsync(id, something1));
             };
         }
         [Fact]
@@ -558,7 +558,7 @@ namespace SomethingTests
             {
                 var persistence = new SomethingElsePersistence(ctx);
                 Domain.Something something1 = mockSomethingFactory.Object.Create(something.Name);
-                var exception = Assert.ThrowsAsync<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdAddSomethingAsync(id, something1));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdAddSomethingAsync(id, something1));
             };
         }
         [Fact]
@@ -658,7 +658,7 @@ namespace SomethingTests
         }
 
         [Fact]
-        public void SomethingElsePersistence__UpdateSomethingElseByIdDeleteSomethingByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
+        public async void SomethingElsePersistence__UpdateSomethingElseByIdDeleteSomethingByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
         {
             int id = 5;
             int id2 = 1;
@@ -674,7 +674,7 @@ namespace SomethingTests
             {
                 var persistence = new SomethingElsePersistence(ctx);
                 Domain.Something something1 = mockSomethingFactory.Object.Create(something.Name);
-                var exception = Assert.ThrowsAsync<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdDeleteSomethingByIdAsync(id, id2));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdDeleteSomethingByIdAsync(id, id2));
             };
         }
 
@@ -696,7 +696,7 @@ namespace SomethingTests
             {
                 var persistence = new SomethingElsePersistence(ctx);
                 Domain.Something something1 = mockSomethingFactory.Object.Create(something.Name);
-                var exception = Assert.Throws<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdDeleteSomethingById(id, id2));
+                Assert.Throws<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdDeleteSomethingById(id, id2));
             };
         }
 
@@ -718,7 +718,7 @@ namespace SomethingTests
             {
                 var persistence = new SomethingElsePersistence(ctx);
                 Domain.Something something1 = mockSomethingFactory.Object.Create(something.Name);
-                var exception = Assert.ThrowsAsync<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdDeleteSomethingByIdAsync(id, id2));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdDeleteSomethingByIdAsync(id, id2));
             };
         }
         [Fact]
@@ -768,12 +768,12 @@ namespace SomethingTests
             using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__DeleteSomethingElseById__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
             {
                 var persistence = new SomethingElsePersistence(ctx);
-                var exception = Assert.Throws<InvalidOperationException>(() => persistence.DeleteSomethingElseById(id));
+                Assert.Throws<InvalidOperationException>(() => persistence.DeleteSomethingElseById(id));
             };
         }
 
         [Fact]
-        public void SomethingElsePersistence__DeleteSomethingElseByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
+        public async void SomethingElsePersistence__DeleteSomethingElseByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
         {
             int id = 1;
             using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__DeleteSomethingElseByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
@@ -784,7 +784,7 @@ namespace SomethingTests
             using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__DeleteSomethingElseByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
             {
                 var persistence = new SomethingElsePersistence(ctx);
-                var exception = Assert.ThrowsAsync<InvalidOperationException>(() => persistence.DeleteSomethingElseByIdAsync(id));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => persistence.DeleteSomethingElseByIdAsync(id));
             };
         }
 
@@ -955,5 +955,132 @@ namespace SomethingTests
             };
         }
 
+        [Fact]
+        public void SomethingElsePersistence__UpdateSomethingElseByIdChangeTag__ChangesTagOfSomethingElseInDatabase()
+        {
+            int id = 1;
+            string tag = "TAG";
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdChangeTag__ChangesTagOfSomethingElseInDatabase)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                persistence.SaveSomethingElse(somethingElse);
+            };
+
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdChangeTag__ChangesTagOfSomethingElseInDatabase)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                Domain.SomethingElse updatedSomethingElse = persistence.UpdateSomethingElseByIdChangeTag(id, tag);
+                Assert.Equal(somethingElse.Name, updatedSomethingElse.Name);
+                Assert.Equal(tag, updatedSomethingElse.Tag);
+            };
+        }
+
+
+        [Fact]
+        public async void SomethingElsePersistence__UpdateSomethingElseByIdChangeTagAsync__ChangesTagOfSomethingElseInDatabase()
+        {
+            int id = 1;
+            string tag = "TAG";
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdChangeTagAsync__ChangesTagOfSomethingElseInDatabase)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                await persistence.SaveSomethingElseAsync(somethingElse);
+            };
+
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdChangeTagAsync__ChangesTagOfSomethingElseInDatabase)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                Domain.SomethingElse updatedSomethingElse = await persistence.UpdateSomethingElseByIdChangeTagAsync(id, tag);
+                Assert.Equal(somethingElse.Name, updatedSomethingElse.Name);
+                Assert.Equal(tag, updatedSomethingElse.Tag);
+            };
+        }
+
+        [Fact]
+        public async void SomethingElsePersistence__UpdateSomethingElseByIdChangeTagAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
+        {
+            int id = 1;
+            string tag = "TAG";
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdChangeTagAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+            };
+
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdChangeTagAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                await Assert.ThrowsAsync<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdChangeTagAsync(id, tag));
+            };
+        }
+
+        [Fact]
+        public void SomethingElsePersistence__UpdateSomethingElseByIdChangeTag__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
+        {
+            int id = 1;
+            string tag = "TAG";
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdChangeTag__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+            };
+
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdChangeTag__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                Assert.Throws<InvalidOperationException>(() => persistence.UpdateSomethingElseByIdChangeTag(id, tag));
+            };
+        }
+
+        [Fact]
+        public async void SomethingElseUpdateInteractor_UpdateSomethingElseChangeTagAsync_AsyncPersistsSomethingElseWithTagChanged()
+        {
+            var name = "Fred Bloggs";
+            string tag = "TAG";
+            var somethingElse1 = Domain.SomethingElse.CreateNamedSomethingElse(name);
+            Mock<ISomethingFactory> mockSomethingFactory = new Mock<ISomethingFactory>();
+            mockSomethingFactory.Setup(x => x.Create(something.Name)).Returns(something);
+            Mock<ISomethingElseFactory> mockSomethingElseFactory = new Mock<ISomethingElseFactory>();
+            mockSomethingElseFactory.Setup(x => x.Create(somethingElse1.Name)).Returns(somethingElse1);
+            Mock<ISomethingElsePersistence> mockPersistence = new Mock<ISomethingElsePersistence>();
+            SomethingElseUpdateInteractor somethingElseInteractor = new SomethingElseUpdateInteractor(mockSomethingFactory.Object, mockSomethingElseFactory.Object, mockPersistence.Object);
+            int else_id = 1;
+            await somethingElseInteractor.UpdateSomethingElseChangeTagAsync(else_id, tag);
+
+            mockPersistence.Verify(x => x.UpdateSomethingElseByIdChangeTagAsync(else_id, tag));
+        }
+
+        [Fact]
+        public void SomethingElseUpdateInteractor_UpdateSomethingElseChangeTag_PersistsSomethingElseWithTagChanged()
+        {
+            var name = "Fred Bloggs";
+            string tag = "TAG";
+            var somethingElse1 = Domain.SomethingElse.CreateNamedSomethingElse(name);
+            Mock<ISomethingFactory> mockSomethingFactory = new Mock<ISomethingFactory>();
+            mockSomethingFactory.Setup(x => x.Create(something.Name)).Returns(something);
+            Mock<ISomethingElseFactory> mockSomethingElseFactory = new Mock<ISomethingElseFactory>();
+            mockSomethingElseFactory.Setup(x => x.Create(somethingElse1.Name)).Returns(somethingElse1);
+            Mock<ISomethingElsePersistence> mockPersistence = new Mock<ISomethingElsePersistence>();
+            SomethingElseUpdateInteractor somethingElseInteractor = new SomethingElseUpdateInteractor(mockSomethingFactory.Object, mockSomethingElseFactory.Object, mockPersistence.Object);
+            int else_id = 1;
+            somethingElseInteractor.UpdateSomethingElseChangeTag(else_id, tag);
+
+            mockPersistence.Verify(x => x.UpdateSomethingElseByIdChangeTag(else_id, tag));
+        }
+
+        [Fact]
+        public void SomethingElseUpdateInteractor_UpdateSomethingElseChangeTag_ThrowsArgumentExceptionIfIllegalCharactersInTag()
+        {
+            var name = "Fred Bloggs";
+            string tag = "TAG:";
+            var somethingElse1 = Domain.SomethingElse.CreateNamedSomethingElse(name);
+            Mock<ISomethingFactory> mockSomethingFactory = new Mock<ISomethingFactory>();
+            mockSomethingFactory.Setup(x => x.Create(something.Name)).Returns(something);
+            Mock<ISomethingElseFactory> mockSomethingElseFactory = new Mock<ISomethingElseFactory>();
+            mockSomethingElseFactory.Setup(x => x.Create(somethingElse1.Name)).Returns(somethingElse1);
+            Mock<ISomethingElsePersistence> mockPersistence = new Mock<ISomethingElsePersistence>();
+            SomethingElseUpdateInteractor somethingElseInteractor = new SomethingElseUpdateInteractor(mockSomethingFactory.Object, mockSomethingElseFactory.Object, mockPersistence.Object);
+            int else_id = 1;
+
+            Assert.Throws<ArgumentException>(() => somethingElseInteractor.UpdateSomethingElseChangeTag(else_id, tag));
+        }
     }
 }

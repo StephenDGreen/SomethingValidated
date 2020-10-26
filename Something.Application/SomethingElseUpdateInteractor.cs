@@ -1,6 +1,7 @@
 ﻿using Something.Domain;
 using Something.Persistence;
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Something.Application
@@ -38,6 +39,18 @@ namespace Something.Application
         public async Task<Domain.Models.SomethingElse> UpdateSomethingElseDeleteSomethingAsync(int else_id, int something_id)
         {
             return await persistence.UpdateSomethingElseByIdDeleteSomethingByIdAsync(else_id, something_id);
+        }
+
+        public async Task<Domain.Models.SomethingElse> UpdateSomethingElseChangeTagAsync(int else_id, string tag)
+        {
+            return await persistence.UpdateSomethingElseByIdChangeTagAsync(else_id, tag);
+        }
+
+        public Domain.Models.SomethingElse UpdateSomethingElseChangeTag(int else_id, string tag)
+        {
+            var pattern = new Regex(@"^[a-zA-Z][a-zA-Z0-9]*$");
+            if (!pattern.IsMatch(tag)) throw new ArgumentException("The tag must be alphanumeric");
+            return persistence.UpdateSomethingElseByIdChangeTag(else_id, tag);
         }
     }
 }

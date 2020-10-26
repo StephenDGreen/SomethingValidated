@@ -22,17 +22,17 @@ namespace Something.Persistence
             ctx.SaveChanges();
         }
 
-        public List<Domain.Models.SomethingElse> GetSomethingElseList()
+        public List<SomethingElse> GetSomethingElseList()
         {
             return ctx.SomethingElses.ToList();
         }
 
-        public List<Domain.Models.SomethingElse> GetSomethingElseIncludingSomethingList()
+        public List<SomethingElse> GetSomethingElseIncludingSomethingList()
         {
             return ctx.SomethingElses.Include(s => s.Somethings).ToList();
         }
 
-        public Domain.Models.SomethingElse UpdateSomethingElseByIdAddSomething(int id, Domain.Models.Something something)
+        public SomethingElse UpdateSomethingElseByIdAddSomething(int id, Domain.Models.Something something)
         {
             var somethingElse = ctx.SomethingElses.Include(s => s.Somethings).Where(r => r.Id == id).FirstOrDefault();
             if (somethingElse == null) throw new InvalidOperationException("SomethingElse does not exist");
@@ -42,7 +42,7 @@ namespace Something.Persistence
             return somethingElse;
         }
 
-        public Domain.Models.SomethingElse UpdateSomethingElseByIdDeleteSomethingById(int else_id, int something_id)
+        public SomethingElse UpdateSomethingElseByIdDeleteSomethingById(int else_id, int something_id)
         {
             var somethingElse = ctx.SomethingElses.Include(s => s.Somethings).Where(r => r.Id == else_id).FirstOrDefault();
             if (somethingElse == null) throw new InvalidOperationException("This SomethingElse does not exist");
@@ -67,17 +67,17 @@ namespace Something.Persistence
             await ctx.SaveChangesAsync();
         }
 
-        public async Task<List<Domain.Models.SomethingElse>> GetSomethingElseListAsync()
+        public async Task<List<SomethingElse>> GetSomethingElseListAsync()
         {
             return await ctx.SomethingElses.ToListAsync();
         }
 
-        public async Task<List<Domain.Models.SomethingElse>> GetSomethingElseIncludingSomethingListAsync()
+        public async Task<List<SomethingElse>> GetSomethingElseIncludingSomethingListAsync()
         {
             return await ctx.SomethingElses.Include(s => s.Somethings).ToListAsync();
         }
 
-        public async Task<Domain.Models.SomethingElse> UpdateSomethingElseByIdAddSomethingAsync(int id, Domain.Models.Something something)
+        public async Task<SomethingElse> UpdateSomethingElseByIdAddSomethingAsync(int id, Domain.Models.Something something)
         {
             var somethingElse = ctx.SomethingElses.Include(s => s.Somethings).Where(r => r.Id == id).FirstOrDefault();
             if (somethingElse == null) throw new InvalidOperationException("SomethingElse does not exist");
@@ -87,7 +87,7 @@ namespace Something.Persistence
             return somethingElse;
         }
 
-        public async Task<Domain.Models.SomethingElse> UpdateSomethingElseByIdDeleteSomethingByIdAsync(int else_id, int something_id)
+        public async Task<SomethingElse> UpdateSomethingElseByIdDeleteSomethingByIdAsync(int else_id, int something_id)
         {
             var somethingElse = ctx.SomethingElses.Include(s => s.Somethings).Where(r => r.Id == else_id).FirstOrDefault();
             if (somethingElse == null) throw new InvalidOperationException("This SomethingElse does not exist");
@@ -104,6 +104,24 @@ namespace Something.Persistence
             if (somethingElse == null) throw new InvalidOperationException("This SomethingElse does not exist");
             ctx.Remove(somethingElse);
             await ctx.SaveChangesAsync();
+        }
+
+        public SomethingElse UpdateSomethingElseByIdChangeTag(int id, string tag)
+        {
+            var somethingElse = ctx.SomethingElses.Include(s => s.Somethings).Where(r => r.Id == id).FirstOrDefault();
+            if (somethingElse == null) throw new InvalidOperationException("This SomethingElse does not exist");
+            somethingElse.Tag = tag;
+            ctx.SaveChanges();
+            return somethingElse;
+        }
+
+        public async Task<SomethingElse> UpdateSomethingElseByIdChangeTagAsync(int id, string tag)
+        {
+            SomethingElse somethingElse = ctx.SomethingElses.Include(s => s.Somethings).Where(r => r.Id == id).FirstOrDefault();
+            if (somethingElse == null) throw new InvalidOperationException("This SomethingElse does not exist");
+            somethingElse.Tag = tag;
+            await ctx.SaveChangesAsync();
+            return somethingElse;
         }
     }
 }
