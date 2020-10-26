@@ -644,7 +644,6 @@ namespace SomethingTests
             using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdDeleteSomethingById__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
             {
                 var persistence = new SomethingElsePersistence(ctx);
-                persistence.SaveSomethingElse(somethingElse);
             };
 
             Mock<ISomethingFactory> mockSomethingFactory = new Mock<ISomethingFactory>();
@@ -659,14 +658,13 @@ namespace SomethingTests
         }
 
         [Fact]
-        public async void SomethingElsePersistence__UpdateSomethingElseByIdDeleteSomethingByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
+        public void SomethingElsePersistence__UpdateSomethingElseByIdDeleteSomethingByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
         {
             int id = 5;
             int id2 = 1;
             using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__UpdateSomethingElseByIdDeleteSomethingByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
             {
                 var persistence = new SomethingElsePersistence(ctx);
-                await persistence.SaveSomethingElseAsync(somethingElse);
             };
 
             Mock<ISomethingFactory> mockSomethingFactory = new Mock<ISomethingFactory>();
@@ -756,6 +754,38 @@ namespace SomethingTests
             await somethingElseInteractor.UpdateSomethingElseDeleteSomethingAsync(else_id, something_id);
 
             mockPersistence.Verify(x => x.UpdateSomethingElseByIdDeleteSomethingByIdAsync(else_id, something_id));
+        }
+
+        [Fact]
+        public void SomethingElsePersistence__DeleteSomethingElseById__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
+        {
+            int id = 1;
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__DeleteSomethingElseById__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+            };
+
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__DeleteSomethingElseById__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                var exception = Assert.Throws<InvalidOperationException>(() => persistence.DeleteSomethingElseById(id));
+            };
+        }
+
+        [Fact]
+        public void SomethingElsePersistence__DeleteSomethingElseByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse()
+        {
+            int id = 1;
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__DeleteSomethingElseByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+            };
+
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__DeleteSomethingElseByIdAsync__ThrowsInvalidOperationExceptionGivenNonexistentSomethingElse)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                var exception = Assert.ThrowsAsync<InvalidOperationException>(() => persistence.DeleteSomethingElseByIdAsync(id));
+            };
         }
 
         [Fact]
@@ -893,6 +923,35 @@ namespace SomethingTests
             using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence_DeleteSomethingElseByIdAsync_DeletionCascades)))
             {
                 Assert.Empty(ctx.Somethings.Where(c => childIds.Contains(c.Id)));
+            };
+        }
+        [Fact]
+        public void SomethingElse_HasATag()
+        {
+            var name = "Fred Bloggs";
+            var expected = "TAG";
+            var something1 = Domain.SomethingElse.CreateNamedSomethingElse(name);
+            something1.Tag = expected;
+
+            string actual = something1.Tag;
+
+            Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public async void DbContextFactory_CreateAppDbContext_AsyncSavesSomethingElseWithTagToDatabaseAndRetrievesItSettingItsTag()
+        {
+            string expected = "TAG";
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(DbContextFactory_CreateAppDbContext_AsyncSavesSomethingElseWithTagToDatabaseAndRetrievesItSettingItsTag)))
+            {
+                somethingElse.Tag = expected;
+                ctx.SomethingElses.Add(somethingElse);
+                await ctx.SaveChangesAsync();
+            };
+
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(DbContextFactory_CreateAppDbContext_AsyncSavesSomethingElseWithTagToDatabaseAndRetrievesItSettingItsTag)))
+            {
+                var savedSomethingElse = ctx.SomethingElses.Single();
+                Assert.Equal(expected, savedSomethingElse.Tag);
             };
         }
 

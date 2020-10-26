@@ -18,6 +18,7 @@ namespace Something.Domain.Models
 
         public List<Something> Somethings { get; private set; }
         public int Id { get; set; }
+        public string Tag { get; set; }
 
         public static SomethingElse CreateNamedSomethingElse(string name)
         {
