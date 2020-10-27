@@ -11,6 +11,7 @@ namespace Something.API.Controllers
     [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     public class ElseController : ControllerBase
     {
         private readonly ISomethingElseCreateInteractor createInteractor;
@@ -41,7 +42,7 @@ namespace Something.API.Controllers
                 catch (Exception ex)
                 {
                     logger.Error(ex, "An error occurred");
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             try
             {
@@ -51,9 +52,10 @@ namespace Something.API.Controllers
             catch (Exception ex)
             {
                 logger.Error(ex, "An error occurred");
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+        [MapToApiVersion("1.0")]
         [HttpPut]
         [Route("api/thingselse/{id}")]
         public async Task<ActionResult> PutAsync(int id, [FromForm] string othername)
@@ -68,7 +70,7 @@ namespace Something.API.Controllers
                 catch (Exception ex)
                 {
                     logger.Error(ex, "An error occurred");
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
 
             if (id < 1)
@@ -79,7 +81,7 @@ namespace Something.API.Controllers
                 catch (Exception ex)
                 {
                     logger.Error(ex, "An error occurred");
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             try
             {
@@ -89,7 +91,7 @@ namespace Something.API.Controllers
             catch (Exception ex)
             {
                 logger.Error(ex, "An error occurred");
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         [HttpDelete]
@@ -106,7 +108,7 @@ namespace Something.API.Controllers
                 catch (Exception ex)
                 {
                     logger.Error(ex, "An error occurred");
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             
             try
@@ -117,7 +119,7 @@ namespace Something.API.Controllers
             catch (Exception ex)
             {
                 logger.Error(ex, "An error occurred");
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         [HttpDelete]
@@ -134,7 +136,7 @@ namespace Something.API.Controllers
                 catch (Exception ex)
                 {
                     logger.Error(ex, "An error occurred");
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             try
             {
@@ -144,7 +146,7 @@ namespace Something.API.Controllers
             catch (Exception ex)
             {
                 logger.Error(ex, "An error occurred");
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         [HttpGet]
@@ -158,7 +160,36 @@ namespace Something.API.Controllers
             catch (Exception ex)
             {
                 logger.Error(ex, "An error occurred");
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [MapToApiVersion("2.0")]
+        [HttpPatch]
+        [Route("api/thingselse/{id}")]
+        public async Task<ActionResult> PatchTagAsync(int id, [FromForm] string tag)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            if (id < 1)
+                try
+                {
+                    return await GetAllSomethingElseIncludeSomethingAsync();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "An error occurred");
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+            try
+            {
+                await updateInteractor.UpdateSomethingElseChangeTagAsync(id, tag);
+                return await GetAllSomethingElseIncludeSomethingAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "An error occurred");
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         private async Task<ActionResult> GetAllSomethingElseIncludeSomethingAsync()

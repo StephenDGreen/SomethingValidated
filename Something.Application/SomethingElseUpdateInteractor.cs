@@ -43,6 +43,8 @@ namespace Something.Application
 
         public async Task<Domain.Models.SomethingElse> UpdateSomethingElseChangeTagAsync(int else_id, string tag)
         {
+            var pattern = new Regex(@"^[a-zA-Z][a-zA-Z0-9]*$");
+            if (!pattern.IsMatch(tag)) throw new ArgumentException("The tag must be alphanumeric");
             return await persistence.UpdateSomethingElseByIdChangeTagAsync(else_id, tag);
         }
 

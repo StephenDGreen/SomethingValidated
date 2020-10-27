@@ -11,6 +11,7 @@ namespace Something.API.Controllers
     [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     public class SomethingController : ControllerBase
     {
 
@@ -42,7 +43,7 @@ namespace Something.API.Controllers
                 catch (Exception ex)
                 {
                     logger.Error(ex, "An error occurred");
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             }
             try
@@ -53,7 +54,7 @@ namespace Something.API.Controllers
             catch (Exception ex)
             {
                 logger.Error(ex, "An error occurred");
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }            
         }
 
@@ -68,7 +69,7 @@ namespace Something.API.Controllers
             catch (Exception ex)
             {
                 logger.Error(ex, "An error occurred");
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         private async Task<ActionResult> GetAllAsync()

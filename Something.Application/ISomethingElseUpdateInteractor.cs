@@ -7,6 +7,8 @@ namespace Something.Application
     {
         SomethingElse UpdateSomethingElseAddSomething(int id, string name);
         Task<SomethingElse> UpdateSomethingElseAddSomethingAsync(int id, string name);
+        SomethingElse UpdateSomethingElseChangeTag(int else_id, string tag);
+        Task<SomethingElse> UpdateSomethingElseChangeTagAsync(int else_id, string tag);
         SomethingElse UpdateSomethingElseDeleteSomething(int else_id, int something_id);
         Task<SomethingElse> UpdateSomethingElseDeleteSomethingAsync(int else_id, int something_id);
     }
