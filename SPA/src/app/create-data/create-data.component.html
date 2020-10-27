@@ -23,8 +23,12 @@
         <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="somethingelse.somethings" width="50%">
           <thead>
             <tr>
-              <th>Other Name</th>
-              <th></th>
+              <th>Other Name(s)</th>
+              <th>Tag: <input type="text" [(ngModel)]="somethingelse.tag">
+                <button class="btn btn-primary" (click)="updateSomethingElseTag(somethingelse.id,somethingelse.tag)">
+                  Update
+                  </button>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -39,7 +43,7 @@
           </tbody>
         </table>
         <button class="btn btn-primary" (click)="addSomething(somethingelse.id)">
-          Add
+          Add to Other Names
         </button>
       </td>
     </tr>

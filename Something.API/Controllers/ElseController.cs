@@ -165,7 +165,7 @@ namespace Something.API.Controllers
         }
         [MapToApiVersion("2.0")]
         [HttpPatch]
-        [Route("api/thingselse/{id}")]
+        [Route("api/thingselse/tag/{id}")]
         public async Task<ActionResult> PatchTagAsync(int id, [FromForm] string tag)
         {
             if (!ModelState.IsValid)
@@ -184,6 +184,45 @@ namespace Something.API.Controllers
             try
             {
                 await updateInteractor.UpdateSomethingElseChangeTagAsync(id, tag);
+                return await GetAllSomethingElseIncludeSomethingAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "An error occurred");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [MapToApiVersion("2.0")]
+        [HttpPatch]
+        [Route("api/thingselse/things/{id}")]
+        public async Task<ActionResult> PatchSomethingAsync(int id, [FromForm] string othername)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+            if (othername.Length < 1)
+                try
+                {
+                    return await GetAllSomethingElseIncludeSomethingAsync();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "An error occurred");
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+
+            if (id < 1)
+                try
+                {
+                    return await GetAllSomethingElseIncludeSomethingAsync();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "An error occurred");
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+            try
+            {
+                await updateInteractor.UpdateSomethingElseAddSomethingAsync(id, othername);
                 return await GetAllSomethingElseIncludeSomethingAsync();
             }
             catch (Exception ex)

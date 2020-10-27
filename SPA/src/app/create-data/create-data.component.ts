@@ -67,7 +67,7 @@ export class CreateDataComponent {
       const lengthOfCode = 10;
       let othername = this.makeRandom(lengthOfCode, possible);
       let body = `othername=${othername}`;
-      this.http.put<any>(this.baseUrl + 'api/thingselse/' + id + '?api-version=1.0', body, { headers: this.header }).subscribe(result => {
+      this.http.patch<any>(this.baseUrl + 'api/thingselse/things/' + id + '?api-version=2.0', body, { headers: this.header }).subscribe(result => {
         this.somethingelses = result;
       }, error2 => console.error(error2));
     }, error1 => console.error(error1));
@@ -88,6 +88,24 @@ export class CreateDataComponent {
         this.http.get<SomethingElse[]>(this.baseUrl + 'api/thingselse?api-version=2.0', { headers: this.header }).subscribe(result => {
           this.somethingelses = result;
         }, error3 => console.error(error3));
+      }, error2 => console.error(error2));
+    }, error1 => console.error(error1));
+  }
+  async updateSomethingElseTag(id: number, tag: string) {
+    await this.http.get<Token>(this.baseUrl + 'home/authenticate?api-version=2.0').subscribe(result => {
+      this.token = result;
+      this.header = new HttpHeaders()
+        .set(
+          "Authorization",
+          `Bearer ${this.token.access_token}`
+        )
+        .set(
+          'Content-Type',
+          'application/x-www-form-urlencoded'
+        );
+      let body = `tag=${tag}`;
+      this.http.patch<any>(this.baseUrl + 'api/thingselse/tag/' + id + '?api-version=2.0', body, { headers: this.header }).subscribe(result => {
+        this.somethingelses = result;
       }, error2 => console.error(error2));
     }, error1 => console.error(error1));
   }
@@ -128,6 +146,7 @@ interface SomethingElse {
   name: string;
   somethings: Something[];
   id: number;
+  tag: string;
 }
 
 interface Token {
